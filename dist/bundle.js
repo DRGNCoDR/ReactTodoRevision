@@ -817,10 +817,74 @@
 	var reactExports = requireReact();
 	var React = /*@__PURE__*/getDefaultExportFromCjs(reactExports);
 
-	function App() {
+	function TodoApp() {
+	  const listStyle = {
+	    listStyleType: "none"
+	  };
+	  const completeText = {
+	    color: "green",
+	    textDecoration: "line-through"
+	  };
+	  const [title, setTitle] = React.useState("");
+	  const [todos, setTodos] = React.useState([]);
+	  const handleChange = e => {
+	    setTitle(e.target.value);
+	  };
+	  const addTodo = () => {
+	    setTodos([...todos, {
+	      id: todos.length + 1,
+	      text: title,
+	      completed: false
+	    }]);
+	  };
+	  const onSubmit = e => {
+	    e.preventDefault();
+	    if (title === "") return;
+	    addTodo();
+	    setTitle("");
+	  };
+	  const removeTodo = todoId => {
+	    const updatedTodos = todos.filter(todo => todo.id !== todoId);
+	    setTodos(updatedTodos);
+	  };
+	  const toggleTodo = todoId => {
+	    const updatedTodos = todos.map(todo => {
+	      return todo.id === todoId ? {
+	        ...todo,
+	        completed: !todo.completed
+	      } : todo;
+	    });
+	    setTodos(updatedTodos);
+	  };
 	  return /*#__PURE__*/React.createElement("div", {
 	    className: "container"
-	  }, /*#__PURE__*/React.createElement("h1", null, "Template"));
+	  }, /*#__PURE__*/React.createElement("form", {
+	    onSubmit: onSubmit
+	  }, /*#__PURE__*/React.createElement("label", {
+	    htmlFor: "todo"
+	  }, "React Todo"), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("input", {
+	    id: "todo",
+	    className: "todo-input",
+	    onChange: handleChange,
+	    value: title
+	  }), /*#__PURE__*/React.createElement("button", {
+	    type: "submit",
+	    className: "add-btn"
+	  }, "Add")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("ul", {
+	    style: listStyle
+	  }, todos.map(todo => /*#__PURE__*/React.createElement("li", {
+	    key: todo.id
+	  }, /*#__PURE__*/React.createElement("input", {
+	    type: "checkbox",
+	    value: todo.completed,
+	    onClick: () => toggleTodo(todo.id)
+	  }), /*#__PURE__*/React.createElement("span", {
+	    className: todo.completed ? "todo-completed" : undefined,
+	    style: todo.completed ? completeText : undefined
+	  }, todo.text), /*#__PURE__*/React.createElement("button", {
+	    className: "delete-btn",
+	    onClick: () => removeTodo(todo.id)
+	  }, "X"))))));
 	}
 
 	var client = {exports: {}};
@@ -1349,7 +1413,7 @@
 
 	const domNode = document.getElementById('root');
 	const root = clientExports.createRoot(domNode);
-	root.render(/*#__PURE__*/React.createElement(App, null));
+	root.render(/*#__PURE__*/React.createElement(TodoApp, null));
 
 })();
 //# sourceMappingURL=bundle.js.map
